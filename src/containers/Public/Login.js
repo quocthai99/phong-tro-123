@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import Swal from 'sweetalert2'
 
 import { InputForm, Button } from "../../components";
 
@@ -8,7 +9,7 @@ import * as actions from "../../store/actions";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { isLoggedIn, msg, update } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   const location = useLocation();
@@ -27,6 +28,10 @@ const Login = () => {
   useEffect(() => {
     isLoggedIn && navigate("/");
   }, [isLoggedIn, navigate]);
+
+  useEffect(() => {
+    msg && Swal.fire('Oop!', msg, 'error')
+  },[msg, update])
 
   const handleSubmit = async () => {
     let finalPayload = isRegister
@@ -104,7 +109,7 @@ const Login = () => {
             label={"HO TEN"}
             value={payload.name}
             setValue={setPayload}
-            type={"name"}
+            keyPayload={"name"}
           />
         )}
         <InputForm
@@ -113,7 +118,7 @@ const Login = () => {
           label={"SO DIEN THOAI"}
           value={payload.phone}
           setValue={setPayload}
-          type={"phone"}
+          keyPayload={"phone"}
         />
         <InputForm
           setInvalidFields={setInvalidFields}
@@ -121,7 +126,8 @@ const Login = () => {
           label={"MAT KHAU"}
           value={payload.password}
           setValue={setPayload}
-          type={"password"}
+          keyPayload={"password"}
+          type='password'
         />
         <Button
           text={isRegister ? "Dang ky" : "Dang nhap"}
